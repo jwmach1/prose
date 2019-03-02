@@ -76,21 +76,20 @@ func doSplit(token string) []*Token {
 func (t *iterTokenizer) tokenize(text string) []*Token {
 	tokens := []*Token{}
 
-	clean, white := sanitizer.Replace(text), false
-	length := utf8.RuneCountInString(clean) + 1
+	cleanString, white := sanitizer.Replace(text), false
+	clean := []rune(cleanString)
+	length := len(clean)
 
 	start, index := 0, 0
 	cache := map[string][]*Token{}
-	for index <= length {
-		uc, size := utf8.DecodeRuneInString(clean[index:])
-		if size == 0 {
-			break
-		} else if index == 0 {
+	for index < length {
+		uc := clean[index]
+		if index == 0 {
 			white = unicode.IsSpace(uc)
 		}
 		if unicode.IsSpace(uc) != white {
 			if start < index {
-				span := clean[start:index]
+				span := string(clean[start:index])
 				if toks, found := cache[span]; found {
 					tokens = append(tokens, toks...)
 				} else {
@@ -106,11 +105,11 @@ func (t *iterTokenizer) tokenize(text string) []*Token {
 			}
 			white = !white
 		}
-		index += size
+		index++
 	}
 
 	if start < index {
-		tokens = append(tokens, doSplit(clean[start:index])...)
+		tokens = append(tokens, doSplit(string(clean[start:index]))...)
 	}
 
 	return tokens
@@ -136,52 +135,52 @@ var emoticons = map[string]int{
 	"(¬_¬)":       1,
 	"(ಠ_ಠ)":       1,
 	"(╯°□°）╯︵┻━┻": 1,
-	"-__-":     1,
-	"8-)":      1,
-	"8-D":      1,
-	"8D":       1,
-	":(":       1,
-	":((":      1,
-	":(((":     1,
-	":()":      1,
-	":)))":     1,
-	":-)":      1,
-	":-))":     1,
-	":-)))":    1,
-	":-*":      1,
-	":-/":      1,
-	":-X":      1,
-	":-]":      1,
-	":-o":      1,
-	":-p":      1,
-	":-x":      1,
-	":-|":      1,
-	":-}":      1,
-	":0":       1,
-	":3":       1,
-	":P":       1,
-	":]":       1,
-	":`(":      1,
-	":`)":      1,
-	":`-(":     1,
-	":o":       1,
-	":o)":      1,
-	"=(":       1,
-	"=)":       1,
-	"=D":       1,
-	"=|":       1,
-	"@_@":      1,
-	"O.o":      1,
-	"O_o":      1,
-	"V_V":      1,
-	"XDD":      1,
-	"[-:":      1,
-	"^___^":    1,
-	"o_0":      1,
-	"o_O":      1,
-	"o_o":      1,
-	"v_v":      1,
-	"xD":       1,
-	"xDD":      1,
-	"¯\\(ツ)/¯": 1,
+	"-__-":        1,
+	"8-)":         1,
+	"8-D":         1,
+	"8D":          1,
+	":(":          1,
+	":((":         1,
+	":(((":        1,
+	":()":         1,
+	":)))":        1,
+	":-)":         1,
+	":-))":        1,
+	":-)))":       1,
+	":-*":         1,
+	":-/":         1,
+	":-X":         1,
+	":-]":         1,
+	":-o":         1,
+	":-p":         1,
+	":-x":         1,
+	":-|":         1,
+	":-}":         1,
+	":0":          1,
+	":3":          1,
+	":P":          1,
+	":]":          1,
+	":`(":         1,
+	":`)":         1,
+	":`-(":        1,
+	":o":          1,
+	":o)":         1,
+	"=(":          1,
+	"=)":          1,
+	"=D":          1,
+	"=|":          1,
+	"@_@":         1,
+	"O.o":         1,
+	"O_o":         1,
+	"V_V":         1,
+	"XDD":         1,
+	"[-:":         1,
+	"^___^":       1,
+	"o_0":         1,
+	"o_O":         1,
+	"o_o":         1,
+	"v_v":         1,
+	"xD":          1,
+	"xDD":         1,
+	"¯\\(ツ)/¯":    1,
 }

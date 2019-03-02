@@ -9,8 +9,9 @@ import (
 	"strconv"
 	"strings"
 	"unicode"
+	"unicode/utf8"
 
-	"github.com/deckarep/golang-set"
+	mapset "github.com/deckarep/golang-set"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -273,7 +274,7 @@ func assignLabels(tokens []*Token, entity *EntityContext) []string {
 				} else if index > start && index < end {
 					history[i] = "I-" + span.Label
 				}
-				index += len(tok.Text)
+				index += utf8.RuneCountInString(tok.Text)
 			}
 		}
 	}

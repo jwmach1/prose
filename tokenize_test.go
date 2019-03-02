@@ -52,6 +52,19 @@ func TestTokenizationEmpty(t *testing.T) {
 	assert.Len(t, getTokenText(doc), 0)
 }
 
+func TestTokenizationUponTextWithUnicodeEmoji(t *testing.T) {
+	doc, _ := makeDoc("Vale is 📍 natural language 📍 that 😊 smile")
+	expected := []string{
+		"Vale", "is", "📍", "natural", "language", "📍", "that", "😊", "smile"}
+	assert.Equal(t, expected, getTokenText(doc))
+}
+
+func TestTokenizationUponFullEmojiText(t *testing.T) {
+	doc, _ := makeDoc("👀  🍇🍍🍒🥔")
+	expected := []string{"👀", "🍇🍍🍒🥔"}
+	assert.Equal(t, expected, getTokenText(doc))
+}
+
 func TestTokenizationSimple(t *testing.T) {
 	doc, _ := makeDoc("Vale is a natural language linter that supports plain text, markup (Markdown, reStructuredText, AsciiDoc, and HTML), and source code comments. Vale doesn't attempt to offer a one-size-fits-all collection of rules—instead, it strives to make customization as easy as possible.")
 	expected := []string{

@@ -65,6 +65,9 @@ func TestSumLogs(t *testing.T) {
 }
 
 func TestNERProdigy(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping malloc count in short mode")
+	}
 	data := filepath.Join(testdata, "reddit_product.jsonl")
 
 	file, e := ioutil.ReadFile(data)
